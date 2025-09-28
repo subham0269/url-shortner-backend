@@ -6,8 +6,22 @@ info:
   servers:
     - url: http://localhost:3000
 
+components:
+  responses:
+    InternalServerError:
+      description: "Internal Server Error"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: "Something went wrong! Please try again later."
+
 paths:
-  /hello:
+  /api/test:
     get:
       summary: Returns a test message
       responses:
@@ -20,8 +34,71 @@ paths:
                 properties:
                   message:
                     type: string
-                  data:
+              example:
+                message: A text message
+  /api/user:
+    post:
+      summary: Add new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - fullName
+                - email
+                - password
+              properties:
+                fullName:
+                  type: string
+                  example: John Doe
+                email:
+                  type: string
+                  example: john@example.com
+                password:
+                  type: string
+                  format: password
+                  example: mysecret123
+      responses:
+        "201":
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  email:
+                    type: string
+                  fullName:
                     type: string
               example:
-                message: Message about the request
-                data: Extra data if needed
+                message: User created
+                email: jane@email.com
+                fullName: Jane Doe
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: Full name and email are required
+        "401":
+          description: Unauthorized. Email or password was incorrect
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: Invaid/Wrong password. Please Try again
+        "500":
+          $ref: "#/components/responses/InternalServerError"
