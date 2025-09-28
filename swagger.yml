@@ -1,0 +1,27 @@
+openapi: "3.0.0"
+info:
+  title: "URL shortner API backend"
+  version: "1.0.0"
+  description: An over-engineered API backend for a simple URL shortner web application.
+  servers:
+    - url: http://localhost:3000
+
+paths:
+  /hello:
+    get:
+      summary: Returns a test message
+      responses:
+        "200":
+          description: A JSON object with the success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  data:
+                    type: string
+              example:
+                message: Message about the request
+                data: Extra data if needed
