@@ -1,3 +1,4 @@
+const { createNewUser } = require("../services/user.service");
 const { createError } = require("../utils/createError");
 const { isValidEmail } = require("../utils/validator");
 
@@ -14,9 +15,9 @@ const addNewUserController = async (req, res, next) => {
     if (!password || password.trim() === "")
       throw createError(401, "Invaid/Wrong password. Please Try again");
 
-    return res
-      .status(201)
-      .json({ message: "user added successfully", email, fullName });
+    const data = await createNewUser(fullName, email, password);
+
+    return res.status(201).json({ message: "user added successfully", data });
   } catch (err) {
     next(err);
   }

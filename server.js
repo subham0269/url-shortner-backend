@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const swaggerui = require("swagger-ui-express");
 const yaml = require("js-yaml");
@@ -22,6 +23,7 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
 
   res.status(err.status || 500).json({
+    status: err.status,
     error: err.message || "Internal Server Error",
   });
 });
