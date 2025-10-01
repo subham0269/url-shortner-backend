@@ -1,4 +1,3 @@
-// import supabase from "../config/supabase.config";
 const { sql } = require("../config/neon.config");
 
 const createNewUser = async (fullName, email, password) => {
@@ -15,6 +14,18 @@ const createNewUser = async (fullName, email, password) => {
   }
 };
 
+const checkIfEmailExists = async (emailId) => {
+  try {
+    const result = await sql`
+    SELECT * FROM users.users WHERE email_id=${emailId}
+    `;
+    return result;
+  } catch (err) {
+    throw err;
+  }
+};
+
 module.exports = {
   createNewUser,
+  checkIfEmailExists,
 };

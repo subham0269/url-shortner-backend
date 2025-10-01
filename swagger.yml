@@ -36,9 +36,12 @@ paths:
                     type: string
               example:
                 message: A text message
-  /api/user:
+
+  /api/user/signup:
     post:
       summary: Add new user
+      tags:
+        - Authentication
       requestBody:
         required: true
         content:
@@ -100,5 +103,69 @@ paths:
                     type: string
               example:
                 message: Invaid/Wrong password. Please Try again
+        "409":
+          description: Conflicting data. Data already exists in the database.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      email:
+                        type: string
+              example:
+                message: Email already exists. Try again with another email id.
+                data:
+                  mame: John Doe
+                  email: test@email.com
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /api/user/login:
+    post:
+      summary: Login existing user
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  example: john@example.com
+                password:
+                  type: string
+                  format: password
+                  example: mysecret123
+      responses:
+        "200":
+          description: User logged in
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  email:
+                    type: string
+                  fullName:
+                    type: string
+                  userid:
+                    type: string
+              example:
+                message: User created
+                email: jane@email.com
+                fullName: Jane Doe
         "500":
           $ref: "#/components/responses/InternalServerError"
