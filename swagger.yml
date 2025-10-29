@@ -37,7 +37,7 @@ paths:
               example:
                 message: A text message
 
-  /api/user/signup:
+  /api/auth/signup:
     post:
       summary: Add new user
       tags:
@@ -125,7 +125,7 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
 
-  /api/user/login:
+  /api/auth/login:
     post:
       summary: Login existing user
       tags:
@@ -167,5 +167,15 @@ paths:
                 message: User created
                 email: jane@email.com
                 fullName: Jane Doe
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /api/auth/verify:
+    get:
+      summary: Check if user is valid
+      tags:
+        - Authentication
+      responses:
+        "200":
+          description: Verification Successful
         "500":
           $ref: "#/components/responses/InternalServerError"

@@ -24,8 +24,7 @@ const fetchFromSession = (token) => {
     const verify = jwt.verify(token, secret);
     return verify;
   } catch (err) {
-    console.error(err.message);
-    throw err;
+    return {};
   }
 };
 

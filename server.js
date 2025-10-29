@@ -29,10 +29,9 @@ app.use(
   cookieSession({
     name: "session",
     keys: [cookie_secret],
-    httpOnly: true,
-    secure: false,
-    sameSite: "lax",
     maxAge: 10 * 1000,
+    sameSite: "lax",
+    secure: false,
   })
 ); // 10 * 1000 -> 10secs
 

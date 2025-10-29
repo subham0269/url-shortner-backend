@@ -25,7 +25,19 @@ const checkIfEmailExists = async (emailId) => {
   }
 };
 
+const checkIfUserExists = async (user_id, email_id) => {
+  try {
+    const result = await sql`
+    SELECT * FROM users.users WHERE user_id=${user_id} AND email_id=${email_id}
+    `;
+    return result;
+  } catch (err) {
+    throw err;
+  }
+};
+
 module.exports = {
   createNewUser,
   checkIfEmailExists,
+  checkIfUserExists,
 };

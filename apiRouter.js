@@ -8,6 +8,6 @@ router.get("/test", async (req, res) => {
   return res.status(200).json({ message: "Test message" });
 });
 
-router.use("/user", userRouter);
+router.use("/auth", userRouter);
 
 module.exports.apiRouter = router;

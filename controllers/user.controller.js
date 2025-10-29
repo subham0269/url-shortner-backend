@@ -1,6 +1,7 @@
 const {
   createNewUser,
   checkIfEmailExists,
+  checkIfUserExists,
 } = require("../services/user.service");
 const { createError } = require("../utils/createError");
 const { isValidEmail } = require("../utils/validator");
@@ -9,6 +10,7 @@ const {
   checkIfPasswordMatches,
 } = require("../utils/password");
 const { createSessionHash, fetchFromSession } = require("../utils/session");
+const { isUUID } = require("validator");
 
 const addNewUserController = async (req, res, next) => {
   try {
@@ -81,7 +83,42 @@ const fetchExistingUserController = async (req, res, next) => {
   }
 };
 
+const verifyUserController = async (req, res, next) => {
+  try {
+    const session = req?.session;
+    if (!session || !session?.u_s_us_sess) {
+      throw createError(401, "No active session");
+    }
+
+    const { user_id, email_id } = fetchFromSession(session?.u_s_us_sess);
+
+    if (!isUUID(user_id)) {
+      throw new Error("Invalid session");
+    }
+
+    const data = await checkIfUserExists(user_id, email_id);
+
+    if (data.length === 0) {
+      throw createError(403, "Invalid session");
+    }
+
+    const {
+      user_id: userId,
+      email_id: emailId,
+      created_at,
+      last_updated_at,
+    } = data[0] || {};
+
+    return res
+      .status(200)
+      .json({ data: { userId, emailId, created_at, last_updated_at } });
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   addNewUserController,
   fetchExistingUserController,
+  verifyUserController,
 };
