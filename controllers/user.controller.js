@@ -66,7 +66,9 @@ const fetchExistingUserController = async (req, res, next) => {
       throw createError(401, "The email or password you entered is incorrect");
     }
 
-    const storedPass = userData[0].password;
+    const user = userData[0];
+
+    const storedPass = user.password;
 
     const isPasswordMatched = await checkIfPasswordMatches(
       storedPass,
@@ -75,7 +77,7 @@ const fetchExistingUserController = async (req, res, next) => {
     if (!isPasswordMatched)
       throw createError(409, "Invalid email or password.");
 
-    req.session.u_s_us_sess = await createSessionHash(userData[0]);
+    req.session.u_s_us_sess = await createSessionHash(user);
 
     return res.status(200).json({ message: "User logged in successfully" });
   } catch (err) {
@@ -105,13 +107,14 @@ const verifyUserController = async (req, res, next) => {
     const {
       user_id: userId,
       email_id: emailId,
-      created_at,
-      last_updated_at,
+      full_name: fullName,
+      created_at: createdAt,
+      last_updated_at: updatedAt,
     } = data[0] || {};
 
-    return res
-      .status(200)
-      .json({ data: { userId, emailId, created_at, last_updated_at } });
+    return res.status(200).json({
+      data: { userId, fullName, emailId, createdAt, updatedAt },
+    });
   } catch (err) {
     next(err);
   }

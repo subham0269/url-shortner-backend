@@ -17,7 +17,8 @@ const createNewUser = async (fullName, email, password) => {
 const checkIfEmailExists = async (emailId) => {
   try {
     const result = await sql`
-    SELECT * FROM users.users WHERE email_id=${emailId}
+      SELECT user_id,full_name,email_id,created_at,last_updated_at,password
+      FROM users.users WHERE email_id=${emailId} LIMIT 1
     `;
     return result;
   } catch (err) {
@@ -28,7 +29,11 @@ const checkIfEmailExists = async (emailId) => {
 const checkIfUserExists = async (user_id, email_id) => {
   try {
     const result = await sql`
-    SELECT * FROM users.users WHERE user_id=${user_id} AND email_id=${email_id}
+      SELECT user_id,full_name,email_id,created_at,last_updated_at 
+      FROM users.users 
+      WHERE user_id=${user_id} AND
+      email_id=${email_id} 
+      LIMIT 1
     `;
     return result;
   } catch (err) {
