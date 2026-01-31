@@ -16,15 +16,18 @@ const createSessionHash = async (data) => {
 
 const fetchFromSession = (token) => {
   const secret = process.env.JWT_SECRET;
-  try {
-    if (typeof token !== "string") {
-      return null;
-    }
+  if (!token || typeof token !== "string") return null;
+  if (!secret) throw new Error("JWT_SECRET missing");
 
-    const verify = jwt.verify(token, secret);
-    return verify;
-  } catch (err) {
-    return {};
+  try {
+    return jwt.verify(token, secret);
+  } catch(err) {
+    if (err.name === "TokenExpiredError") {
+      const error = new Error("TOKEN_EXPIRED");
+      error.code = "TOKEN_EXPIRED";
+      throw error;
+    }
+    throw err;
   }
 };
 

@@ -92,7 +92,7 @@ const verifyUserController = async (req, res, next) => {
       throw createError(401, "No active session");
     }
 
-    const { user_id, email_id } = fetchFromSession(session?.u_s_us_sess);
+    const { user_id, email_id } = fetchFromSession(session?.u_s_us_sess) || {};
 
     if (!isUUID(user_id)) {
       throw new Error("Invalid session");
@@ -116,6 +116,10 @@ const verifyUserController = async (req, res, next) => {
       data: { userId, fullName, emailId, createdAt, updatedAt },
     });
   } catch (err) {
+    if (err.code === "TOKEN_EXPIRED") {
+      // return res.status(401).json({ reason: "TOKEN_EXPIRED" });
+      throw createError(401, "TOKEN_EXPIRED")
+    }
     next(err);
   }
 };
