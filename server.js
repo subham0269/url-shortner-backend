@@ -9,17 +9,19 @@ const cookieParser = require("cookie-parser");
 const cookieSession = require("cookie-session");
 
 const app = express();
-const PORT = 8080;
+const PORT = process.env.SERVER_PORT;
 const cookie_secret = process.env.COOKIE_SECRET;
 
+app.set("trust proxy", 1);
+
 const swagger_yaml_document = yaml.load(
-  fs.readFileSync(__dirname + "/swagger.yml", "utf-8")
+  fs.readFileSync(__dirname + "/swagger.yml", "utf-8"),
 );
 app.use(
   cors({
     origin: "http://localhost:5173",
     credentials: true,
-  })
+  }),
 );
 
 app.use(express.json());
@@ -29,10 +31,11 @@ app.use(
   cookieSession({
     name: "session",
     keys: [cookie_secret],
-    maxAge: 10 * 1000,
-    sameSite: "lax",
-    secure: false,
-  })
+    maxAge: 900 * 1000,
+    secure: true,
+    sameSite: "none",
+    httpOnly: true,
+  }),
 ); // 10 * 1000 -> 10secs
 
 app.use("/docs", swaggerui.serve, swaggerui.setup(swagger_yaml_document));

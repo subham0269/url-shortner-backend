@@ -10,4 +10,6 @@ router.get("/test", async (req, res) => {
 
 router.use("/auth", userRouter);
 
+router.use("/urls", urlRouter);
+
 module.exports.apiRouter = router;

@@ -177,5 +177,7 @@ paths:
       responses:
         "200":
           description: Verification Successful
+        "401":
+          description: Verification Failed.
         "500":
           $ref: "#/components/responses/InternalServerError"

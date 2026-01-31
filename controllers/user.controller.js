@@ -39,7 +39,7 @@ const addNewUserController = async (req, res, next) => {
     const data = await createNewUser(
       fullName.trim(),
       email.trim(),
-      hashedPassword
+      hashedPassword,
     );
 
     return res.status(201).json({ message: "User added successfully!!", data });
@@ -72,7 +72,7 @@ const fetchExistingUserController = async (req, res, next) => {
 
     const isPasswordMatched = await checkIfPasswordMatches(
       storedPass,
-      password
+      password,
     );
     if (!isPasswordMatched)
       throw createError(409, "Invalid email or password.");
