@@ -169,6 +169,7 @@ paths:
                 fullName: Jane Doe
         "500":
           $ref: "#/components/responses/InternalServerError"
+
   /api/auth/verify:
     get:
       summary: Check if user is valid
@@ -181,3 +182,46 @@ paths:
           description: Verification Failed.
         "500":
           $ref: "#/components/responses/InternalServerError"
+
+  /api/urls/create:
+    post:
+      summary: Create an Url
+      tags:
+        - Urls
+      requestBody: 
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - base_url
+              properties:
+                base_url:
+                  type: string
+                  example: http://www.activity-time.com
+                custom_alias:
+                  type: string
+                  example: my-link
+                expires_at:
+                  type: string
+                  example: 2024-12-31T23:59:59Z
+      responses:
+        "201":
+          description: Successfully created a new link 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  short_url:
+                    type: string
+                  id:
+                    type: string
+                  custom_alias:
+                    type: string
+                  expires_at:
+                    type: string
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+

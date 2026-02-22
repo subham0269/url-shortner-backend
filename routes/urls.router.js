@@ -1,9 +1,11 @@
 const express = require("express");
+const authMiddleware = require("../middlewares/auth.middleware");
+const urlsController = require("../controllers/urls.controller");
 
 const router = express.Router();
 
-router.use((req, res, next) => {
-    console.log(`Logged at Time: ${Date.now()}`)
-});
+router.use(authMiddleware.checkValidUser);
+
+router.post('/create', urlsController.create);
 
 module.exports = router;

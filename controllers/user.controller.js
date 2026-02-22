@@ -1,8 +1,4 @@
-const {
-  createNewUser,
-  checkIfEmailExists,
-  checkIfUserExists,
-} = require("../services/user.service");
+const userService = require("../services/user.service");
 const { createError } = require("../utils/createError");
 const { isValidEmail } = require("../utils/validator");
 const {
@@ -25,7 +21,7 @@ const addNewUserController = async (req, res, next) => {
     if (!password || password.trim() === "")
       throw createError(401, "Invaid/Wrong password. Please Try again");
 
-    const isEmailExists = (await checkIfEmailExists(email)).length > 0;
+    const isEmailExists = (await userService.checkIfEmailExists(email)).length > 0;
 
     if (isEmailExists) {
       return res.status(409).json({
@@ -36,7 +32,7 @@ const addNewUserController = async (req, res, next) => {
 
     const hashedPassword = await createPasswordHash(password);
 
-    const data = await createNewUser(
+    const data = await userService.createNewUser(
       fullName.trim(),
       email.trim(),
       hashedPassword,
@@ -60,7 +56,7 @@ const fetchExistingUserController = async (req, res, next) => {
       throw createError(400, "Invalid email address");
     }
 
-    const userData = await checkIfEmailExists(email);
+    const userData = await userService.checkIfEmailExists(email);
 
     if (userData.length === 0) {
       throw createError(401, "The email or password you entered is incorrect");
@@ -95,10 +91,10 @@ const verifyUserController = async (req, res, next) => {
     const { user_id, email_id } = fetchFromSession(session?.u_s_us_sess) || {};
 
     if (!isUUID(user_id)) {
-      throw new Error("Invalid session");
+      throw createError(403, "Invalid session");
     }
 
-    const data = await checkIfUserExists(user_id, email_id);
+    const data = await userService.checkIfUserExists(user_id, email_id);
 
     if (data.length === 0) {
       throw createError(403, "Invalid session");

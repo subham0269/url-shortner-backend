@@ -6,7 +6,7 @@ const createSessionHash = async (data) => {
     const { user_id, full_name, email_id, created_at, ...rest } = data;
     const token = jwt.sign({ user_id, email_id, created_at }, secret, {
       algorithm: "HS256",
-      expiresIn: "10s",
+      expiresIn: "24h",
     });
     return token;
   } catch (err) {
